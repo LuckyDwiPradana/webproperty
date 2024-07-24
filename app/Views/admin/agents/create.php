@@ -105,8 +105,8 @@ $no = 1; // Variabel untuk nomor urut, dimulai dari 1
                             </div>
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
-                                    <label for="twitter">Twitter (URL)</label>
-                                    <input type="url" class="form-control" id="twitter" name="twitter" required value="<?= old('twitter') ?>" placeholder="Masukkan URL Twitter">
+                                    <label for="tiktok">Tiktok (URL)</label>
+                                    <input type="url" class="form-control" id="tiktok" name="tiktok" required value="<?= old('tiktok') ?>" placeholder="Masukkan URL Twitter">
                                 </div>
                             </div>
                             <div class="col-md-6 col-12">
@@ -123,18 +123,18 @@ $no = 1; // Variabel untuk nomor urut, dimulai dari 1
                             </div>
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
-                                    <label for="password_confirmation">Konfirmasi Password</label>
-                                    <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required minlength="8">
+                                    <label for="agent_photo">Foto Agent</label>
+                                    <input type="file" class="form-control" id="agent_photo" name="agent_photo" required accept="image/*">
                                 </div>
                             </div>
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
-                                    <label for="agent_photo">Foto Agent</label>
-                                    <input type="file" class="form-control-file" id="agent_photo" name="agent_photo" required accept="image/*">
+                                    <label for="password_confirmation">Konfirmasi Password</label>
+                                    <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required minlength="8">
                                 </div>
                             </div>
                             <div class="col-12 d-flex justify-content-end">
-                                <button type="submit" class="btn btn-primary me-1 mb-1">Tambah</button>
+                                <button type="submit" class="btn btn-primary me-1 mb-1">Simpan</button>
                                 <button type="reset" class="btn btn-light-secondary me-1 mb-1">Reset</button>
                             </div>
                         </div>

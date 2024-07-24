@@ -14,7 +14,7 @@ class ShowingModel extends Model
     {
         $this->client = new Client([
             'headers' => [
-                'Authorization' => 'Bearer ' . session()->get('auth_token'),
+                'Authorization' => 'Bearer ' . session()->get('token'),
             ],
         ]);
         $this->baseUrl = 'http://127.0.0.1:8000/api/admin/';
@@ -24,7 +24,14 @@ class ShowingModel extends Model
     {
         $response = $this->client->get($this->baseUrl . 'allshowings');
         $showings = json_decode($response->getBody()->getContents(), true);
-        return $showings['showings'];
+        // Format data showing
+    $formattedShowings = array_map(function($showing) {
+        $showing['property_name'] = $showing['property']['name'] ?? 'Tidak Ada Property';
+        $showing['agent_name'] = $showing['agent']['agent_name'] ?? 'Tidak Ada Agent';
+        return $showing;
+    }, $showings['showings']);
+
+    return $formattedShowings;
     }
 
     public function getShowing($id)
@@ -119,9 +126,19 @@ public function updateShowing($id, $data)
         return false;
     }
 }
-    public function deleteShowing($id)
-    {
+   public function deleteShowing($id)
+{
+    try {
         $response = $this->client->delete($this->baseUrl . 'showing/' . $id);
-        return json_decode($response->getBody()->getContents(), true);
+        $result = json_decode($response->getBody()->getContents(), true);
+        
+        if ($response->getStatusCode() === 200) {
+            return ['message' => $result['message'] ?? 'Showing berhasil dihapus'];
+        } else {
+            return ['error' => $result['error'] ?? 'Gagal menghapus showing'];
+        }
+    } catch (\Exception $e) {
+        return ['error' => 'Terjadi kesalahan: ' . $e->getMessage()];
     }
+}
 }

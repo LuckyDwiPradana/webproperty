@@ -14,7 +14,7 @@ class AgentPropertyModel extends Model
     {
         $this->client = new Client([
             'headers' => [
-                'Authorization' => 'Bearer ' . session()->get('auth_token'),
+                'Authorization' => 'Bearer ' . session()->get('token'),
             ],
         ]);
         $this->baseUrl = 'http://127.0.0.1:8000/api/agent/';
@@ -131,8 +131,52 @@ class AgentPropertyModel extends Model
     }
 
     public function deleteProperty($id)
-    {
+{
+    try {
         $response = $this->client->delete($this->baseUrl . 'property/' . $id);
-        return json_decode($response->getBody()->getContents(), true);
+        $result = json_decode($response->getBody()->getContents(), true);
+
+        if (isset($result['success']) && $result['success'] === true) {
+            // Jika API berhasil menghapus, hapus foto lokal jika ada
+            if (isset($result['data']['photos']) && is_array($result['data']['photos'])) {
+                $this->deleteLocalPhotos($result['data']['photos']);
+            }
+            return [
+                'success' => true,
+                'message' => $result['message'] ?? 'Property berhasil dihapus.'
+            ];
+        } else {
+            return [
+                'success' => false,
+                'message' => $result['message'] ?? 'Gagal menghapus properti.'
+            ];
+        }
+    } catch (\Exception $e) {
+        log_message('error', 'Error deleting property: ' . $e->getMessage());
+        return [
+            'success' => false,
+            'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+        ];
     }
+}
+
+private function deleteLocalPhotos($photos)
+{
+    foreach ($photos as $photo) {
+        if (!isset($photo['url'])) continue;
+
+        $filename = basename($photo['url']);
+        $filePath = FCPATH . 'storage/properties/' . $filename;
+
+        if (file_exists($filePath)) {
+            if (unlink($filePath)) {
+                log_message('info', 'File deleted: ' . $filePath);
+            } else {
+                log_message('error', 'Failed to delete file: ' . $filePath);
+            }
+        } else {
+            log_message('warning', 'File not found: ' . $filePath);
+        }
+    }
+}
 }

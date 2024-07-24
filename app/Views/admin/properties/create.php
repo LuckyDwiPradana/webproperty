@@ -42,6 +42,21 @@ $no = 1; // Variabel untuk nomor urut, dimulai dari 1
 
    <div class="page-heading">
     <div class="page-title">
+          <?php if (session()->getFlashdata('success')): ?>
+            <div class="alert alert-light-success color-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle"></i>
+                <?= session()->getFlashdata('success') ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php endif; ?>
+
+        <?php if (session()->getFlashdata('error')): ?>
+            <div class="alert alert-light-danger color-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-circle"></i>
+                <?= session()->getFlashdata('error') ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php endif; ?>
         <div class="row">
             <div class="col-12 col-md-6 order-md-1 order-last">
                 <h3>Data Properti</h3>
@@ -49,171 +64,168 @@ $no = 1; // Variabel untuk nomor urut, dimulai dari 1
             <div class="col-12 col-md-6 order-md-2 order-first">
                 <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/admin/properties/index">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="/admin/index">Dashboard</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Tambah Properti</li>
                     </ol>
                 </nav>
             </div>
         </div>
     </div>
-               <!-- Form tambah properti -->
-            <section id="multiple-column-form">
-                <div class="row match-height">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4 class="card-title">Tambah Properti</h4>
+              <!-- Form tambah properti -->
+<section id="multiple-column-form">
+    <div class="row match-height">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Tambah Properti</h4>
+                </div>
+                <div class="card-content">
+                    <div class="card-body">
+                        <?= form_open_multipart('/admin/properties/store') ?>
+                        <div class="row">
+                            <div class="col-md-6 col-12">
+                                <div class="form-group">
+                                    <label for="name">Nama</label>
+                                    <input type="text" class="form-control" id="name" name="name" value="<?= old('name') ?>" required placeholder="Masukkan Nama Properti">
+                                </div>
                             </div>
-                            <div class="card-content">
-                                <div class="card-body">
-                                    <?= form_open_multipart('/admin/properties/store') ?>
-                                    <div class="row">
-                                        <div class="col-md-6 col-12">
-                                            <div class="form-group">
-                                                <label for="name">Nama</label>
-                                                <input type="text" class="form-control" id="name" name="name" value="<?= old('name') ?>" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-12">
-                                            <div class="form-group">
-                                                <label for="status">Status</label>
-                                                <select class="form-control" id="status" name="status" required>
-                                                    <option value="Sale" <?= old('status') == 'Sale' ? 'selected' : '' ?>>Jual</option>
-                                                    <option value="Rent" <?= old('status') == 'Rent' ? 'selected' : '' ?>>Sewa</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-12">
-                                            <div class="form-group">
-                                                <label for="location">Lokasi</label>
-                                                <input type="text" class="form-control" id="location" name="location" value="<?= old('location') ?>" required>
-                                             <div id="map"></div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-12">
-                                            <div class="form-group">
-                                                <label for="bedroom">Jumlah Kamar Tidur</label>
-                                                <input type="number" class="form-control" id="bedroom" name="bedroom" value="<?= old('bedroom') ?>" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-12">
-                                            <div class="form-group">
-                                                <label for="bathroom">Jumlah Kamar Mandi</label>
-                                                <input type="number" class="form-control" id="bathroom" name="bathroom" value="<?= old('bathroom') ?>" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-12">
-                                            <div class="form-group">
-                                                <label for="building_size">Luas Bangunan</label>
-                                                <input type="number" step="0.01" class="form-control" id="building_size" name="building_size" value="<?= old('building_size') ?>" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-12">
-                                            <div class="form-group">
-                                                <label for="price">Harga</label>
-                                                <input type="number" class="form-control" id="price" name="price" value="<?= old('price') ?>" required>
-                                            </div>
-                                        </div>
-                                         <div class="col-md-6 col-12">
-                                    <div class="form-group">
-                                        <label for="reference_id">Referensi ID</label>
-                                        <input type="text" class="form-control" id="reference_id" name="reference_id" value="<?= uniqid('REF-', true) ?>" readonly>
+                            <div class="col-md-6 col-12">
+                                <div class="form-group">
+                                    <label for="status">Status</label>
+                                    <select class="form-control" id="status" name="status" required>
+                                        <option value="Jual" <?= old('status') == 'Jual' ? 'selected' : '' ?>>Jual</option>
+                                        <option value="Sewa" <?= old('status') == 'Sewa' ? 'selected' : '' ?>>Sewa</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-12">
+                                <div class="form-group">
+                                    <label for="location">Lokasi</label>
+                                    <input type="text" class="form-control" id="location" name="location" value="<?= old('location') ?>" required placeholder="Masukkan Lokasi Properti">
+                                    <div id="map"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-12">
+                                <div class="form-group">
+                                    <label for="bedroom">Jumlah Kamar Tidur</label>
+                                    <input type="number" class="form-control" id="bedroom" name="bedroom" value="<?= old('bedroom') ?>" required placeholder="Masukkan Jumlah Kamar Tidur">
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-12">
+                                <div class="form-group">
+                                    <label for="bathroom">Jumlah Kamar Mandi</label>
+                                    <input type="number" class="form-control" id="bathroom" name="bathroom" value="<?= old('bathroom') ?>" required placeholder="Masukkan Jumlah Kamar Mandi">
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-12">
+                                <div class="form-group">
+                                    <label for="building_size">Luas Bangunan</label>
+                                    <input type="number" step="0.01" class="form-control" id="building_size" name="building_size" value="<?= old('building_size') ?>" required placeholder="Masukkan Luas Bangunan (m²)">
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-12">
+                                <div class="form-group">
+                                    <label for="price">Harga</label>
+                                    <input type="number" class="form-control" id="price" name="price" value="<?= old('price') ?>" required placeholder="Masukkan Harga Properti">
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-12">
+                                <div class="form-group">
+                                    <label for="reference_id">Referensi ID</label>
+                                    <input type="text" class="form-control" id="reference_id" name="reference_id" value="<?= 'REF-' . sprintf('%04d', rand(0, 9999)) ?>" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-12">
+                                <div class="form-group">
+                                    <label for="area">Area</label>
+                                    <input type="text" class="form-control" id="area" name="area" value="<?= old('area') ?>" placeholder="Masukkan Area">
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-12">
+                                <div class="form-group">
+                                    <label for="listing_type">Tipe Listing</label>
+                                    <select class="form-control" id="listing_type" name="listing_type" required>
+                                        <option value="">- Pilih Tipe Listing -</option>
+                                        <option value="HGB" <?= old('listing_type') == 'HGB' ? 'selected' : '' ?>>HGB</option>
+                                        <option value="HGU" <?= old('listing_type') == 'HGU' ? 'selected' : '' ?>>HGU</option>
+                                        <option value="Hak Pakai" <?= old('listing_type') == 'Hak Pakai' ? 'selected' : '' ?>>Hak Pakai</option>
+                                        <option value="SHM" <?= old('listing_type') == 'SHM' ? 'selected' : '' ?>>SHM</option>
+                                        <option value="HMSRS" <?= old('listing_type') == 'HMSRS' ? 'selected' : '' ?>>HMSRS</option>
+                                        <option value="Girik" <?= old('listing_type') == 'Girik' ? 'selected' : '' ?>>Girik</option>
+                                        <option value="Akta Jual Beli" <?= old('listing_type') == 'Akta Jual Beli' ? 'selected' : '' ?>>Akta Jual Beli</option>
+                                        <option value="Surat Keterangan Tanah" <?= old('listing_type') == 'Surat Keterangan Tanah' ? 'selected' : '' ?>>Surat Keterangan Tanah</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-12">
+                                <div class="form-group">
+                                    <label for="property_type">Tipe Properti</label>
+                                    <select class="form-control" id="property_type" name="property_type" required>
+                                        <option value="">- Pilih Tipe Properti -</option>
+                                        <option value="Apartemen" <?= old('property_type') == 'Apartemen' ? 'selected' : '' ?>>Apartemen</option>
+                                        <option value="Hotel" <?= old('property_type') == 'Hotel' ? 'selected' : '' ?>>Hotel</option>
+                                        <option value="Ruko" <?= old('property_type') == 'Ruko' ? 'selected' : '' ?>>Ruko</option>
+                                        <option value="Rumah" <?= old('property_type') == 'Rumah' ? 'selected' : '' ?>>Rumah</option>
+                                        <option value="Tanah" <?= old('property_type') == 'Tanah' ? 'selected' : '' ?>>Tanah</option>
+                                        <option value="Villa" <?= old('property_type') == 'Villa' ? 'selected' : '' ?>>Villa</option>
+                                        <option value="Gudang" <?= old('property_type') == 'Gudang' ? 'selected' : '' ?>>Gudang</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-12">
+                                <div class="form-group">
+                                    <label for="land_area">Luas Tanah</label>
+                                    <input type="number" class="form-control" id="land_area" name="land_area" value="<?= old('land_area') ?>" placeholder="Masukkan Luas Tanah (m²)">
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-12">
+                                <div class="form-group">
+                                    <label for="year_built">Tahun Dibangun</label>
+                                    <input type="number" class="form-control" id="year_built" name="year_built" value="<?= old('year_built') ?>" placeholder="Masukkan Tahun Dibangun">
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-12">
+                                <div class="form-group">
+                                    <label for="agent_id">Agent</label>
+                                    <select class="form-control" id="agent_id" name="agent_id" required>
+                                        <?php $agents = (new \App\Models\PropertyModel())->getAllAgents(); ?>
+                                        <?php if (!empty($agents)): ?>
+                                            <?php foreach ($agents as $agent): ?>
+                                                <option value="<?= $agent['id'] ?>" <?= old('agent_id') == $agent['id'] ? 'selected' : '' ?>><?= $agent['agent_name'] ?></option>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <option value="">Tidak ada agen</option>
+                                        <?php endif; ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="description">Deskripsi</label>
+                                    <textarea class="form-control" id="description" name="description" required placeholder="Masukkan Deskripsi Properti"><?= old('description') ?></textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-12">
+                                <div class="form-group">
+                                    <label for="photos">Foto</label>
+                                    <div class="input-group">
+                                        <input type="file" class="form-control" id="photos" name="photos[]" aria-label="Upload" multiple>
                                     </div>
                                 </div>
-                                    <div class="col-md-6 col-12">
-                                        <div class="form-group">
-                                            <label for="area">Area</label>
-                                            <input type="text" class="form-control" id="area" name="area" value="<?= old('area') ?>">
-                                        </div>
-                                    </div>
-                                        <div class="col-md-6 col-12">
-                                    <div class="form-group">
-                                        <label for="listing_type">Tipe Listing</label>
-                                        <select class="form-control" id="listing_type" name="listing_type" required>
-                                            <option value="">- Pilih Tipe Listing -</option>
-                                            <option value="HGB" <?= old('listing_type') == 'HGB' ? 'selected' : '' ?>>HGB</option>
-                                            <option value="HGU" <?= old('listing_type') == 'HGU' ? 'selected' : '' ?>>HGU</option>
-                                            <option value="Hak Paka" <?= old('listing_type') == 'Hak Pakai' ? 'selected' : '' ?>>Hak Pakai</option>
-                                            <option value="SHM" <?= old('listing_type') == 'SHM' ? 'selected' : '' ?>>SHM</option>
-                                            <option value="HMSRS" <?= old('listing_type') == 'HMSRS' ? 'selected' : '' ?>>HMSRS</option>
-                                            <option value="Girik" <?= old('listing_type') == 'Girik' ? 'selected' : '' ?>>Girik</option>
-                                            <option value="Akta Jual Beli" <?= old('listing_type') == 'Akta Jual Beli' ? 'selected' : '' ?>>Akta Jual Beli</option>
-                                            <option value="Surat Keterangan Tanah" <?= old('listing_type') == 'Surat Keterangan Tanah' ? 'selected' : '' ?>>Surat Keterangan Tanah</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                        <div class="col-md-6 col-12">
-                                            <div class="form-group">
-                                                <label for="property_type">Tipe Properti</label>
-                                                <select class="form-control" id="property_type" name="property_type" required>
-                                                    <option value="">- Pilih Tipe Properti -</option>
-                                                    <option value="Apartemen" <?= old('property_type') == 'Apartemen' ? 'selected' : '' ?>>Apartemen</option>
-                                                    <option value="Hotel" <?= old('property_type') == 'Hotel' ? 'selected' : '' ?>>Hotel</option>
-                                                    <option value="Ruko" <?= old('property_type') == 'Ruko' ? 'selected' : '' ?>>Ruko</option>
-                                                    <option value="Rumah" <?= old('property_type') == 'Rumah' ? 'selected' : '' ?>>Rumah</option>
-                                                    <option value="Tanah" <?= old('property_type') == 'Tanah' ? 'selected' : '' ?>>Tanah</option>
-                                                    <option value="Villa" <?= old('property_type') == 'Villa' ? 'selected' : '' ?>>Villa</option>
-                                                    <option value="Gudang" <?= old('property_type') == 'Gudang' ? 'selected' : '' ?>>Gudang</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-12">
-                                            <div class="form-group">
-                                                <label for="land_area">Luas Tanah</label>
-                                                <input type="number" class="form-control" id="land_area" name="land_area" value="<?= old('land_area') ?>">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-12">
-                                            <div class="form-group">
-                                                <label for="year_built">Tahun Dibangun</label>
-                                                <input type="number" class="form-control" id="year_built" name="year_built" value="<?= old('year_built') ?>">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-12">
-                                        <div class="form-group">
-                                            <label for="agent_id">Agent</label>
-                                            <select class="form-control" id="agent_id" name="agent_id" required>
-                                                <?php $agents = (new \App\Models\PropertyModel())->getAllAgents(); ?>
-                                                <?php if (!empty($agents)): ?>
-                                                    <?php foreach ($agents as $agent): ?>
-                                                        <option value="<?= $agent['id'] ?>" <?= old('agent_id') == $agent['id'] ? 'selected' : '' ?>><?= $agent['agent_name'] ?></option>
-                                                    <?php endforeach; ?>
-                                                <?php else: ?>
-                                                    <option value="">Tidak ada agen</option>
-                                                <?php endif; ?>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-group">
-                                              <!-- <div id="snow"> -->
-                                            <label for="description">Deskripsi</label>
-                                            <textarea class="form-control" id="description" name="description" required><?= old('description') ?></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-12">
-                                         <div class="form-group">
-                                        <label for="photos">Foto</label>
-                                        <div class="input-group">
-                                            <input type="file" class="form-control" id="photos" name="photos[]" aria-label="Upload"  multiple>
-                                            <div class="input-group-append">
-                                                <button class="btn btn-primary" type="button" id="inputGroupFileAddon04">Upload</button>
-                                            </div>
-                                        </div>
-                                        </div>
-                                        </div>
-                                    <div class="col-12 d-flex justify-content-end">
-                                     <button type="submit" class="btn btn-primary me-1 mb-1">Tambah</button>
-                                    <button type="reset" class="btn btn-light-secondary me-1 mb-1">Reset</button>
-                                </div>
-                                </div>
-                            <?= form_close() ?>
+                            </div>
+                            <div class="col-12 d-flex justify-content-end">
+                                <button type="submit" class="btn btn-primary me-1 mb-1">Simpan</button>
+                                <button type="reset" class="btn btn-light-secondary me-1 mb-1">Reset</button>
+                            </div>
                         </div>
+                        <?= form_close() ?>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
+
     <!-- Basic multiple Column Form section end -->
 </div>
 

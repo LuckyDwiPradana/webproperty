@@ -7,7 +7,7 @@ $no = 1; // Variabel untuk nomor urut, dimulai dari 1
     <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Properti</title>
+    <title>Data Agen</title>
     
     
     
@@ -27,105 +27,143 @@ $no = 1; // Variabel untuk nomor urut, dimulai dari 1
 
 <body>
 <script src="<?= base_url('/admin/static/js/initTheme.js') ?>"></script>   
-Copy<!-- Alert sukses -->
-<?php if (session()->getFlashdata('success')): ?>
-    <div class="alert alert-light-success color-success">
+
+<div id="app">
+    <div id="main">
+        <header class="mb-3">
+            <a href="#" class="burger-btn d-block d-xl-none">
+                <i class="bi bi-justify fs-3"></i>
+            </a>
+        </header>
+
+        <?= $this->include('admin/layouts/sidebar') ?>
+        <?php if (session()->getFlashdata('success')): ?>
+    <div class="alert alert-light-success color-success alert-dismissible fade show" role="alert">
         <i class="bi bi-check-circle"></i>
         <?= session()->getFlashdata('success') ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 <?php endif; ?>
 
-<!-- Alert validasi -->
 <?php if (session()->getFlashdata('error')): ?>
-    <div class="alert alert-light-danger color-danger">
+    <div class="alert alert-light-danger color-danger alert-dismissible fade show" role="alert">
         <i class="bi bi-exclamation-circle"></i>
         <?= session()->getFlashdata('error') ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 <?php endif; ?>
-  <div id="app">
-        <div id="main">
-            <header class="mb-3">
-                <a href="#" class="burger-btn d-block d-xl-none">
-                    <i class="bi bi-justify fs-3"></i>
-                </a>
-            </header>
-
-            <?= $this->include('admin/layouts/sidebar') ?>
-<div class="page-heading">
-    <div class="page-title">
-        <div class="row">
-            <div class="col-12 col-md-6 order-md-1 order-last">
-                <h3>Data Properti</h3>
+        <div class="page-heading">
+            <div class="page-title">
+                <div class="row">
+                    <div class="col-12 col-md-6 order-md-1 order-last">
+                        <h3>Data Agent</h3>
+                    </div>
+                    <div class="col-12 col-md-6 order-md-2 order-first">
+                        <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="/admin/index">Dashboard</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Lihat Agent</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
             </div>
-            <div class="col-12 col-md-6 order-md-2 order-first">
-                <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/admin/properties/index">Dashboard</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Lihat Properti</li>
-                    </ol>
-                </nav>
-            </div>
-        </div>
-    </div>
-    <section class="section">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="card-title">
-                    Lihat Properti
-                </h5>
-            </div>
-            <div class="card-body">
-                <table class="table table-striped" id="table1">
-                    <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Nama</th>
-                    <th>Alamat</th>
-                    <th>Nomor Telepon</th>
-                    <th>Email</th>
-                    <th>Facebook</th>
-                    <th>Twitter</th>
-                    <th>Instagram</th>
-                    <th>Foto</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($agents as $agent): ?>
-                <tr>
-                    <td><?= $no++ ?></td>
-                    <td><?= $agent['agent_name'] ?></td>
-                    <td><?= $agent['address'] ?></td>
-                    <td><?= $agent['phone_number'] ?></td>
-                    <td><?= $agent['email'] ?></td>
-                    <td><?= $agent['facebook'] ?></td>
-                    <td><?= $agent['twitter'] ?></td>
-                    <td><?= $agent['instagram'] ?></td>
-                    <td> <?php if (isset($agent['agent_photo_url']) && !empty($agent['agent_photo_url'])): ?>                            <img src="<?= $agent['agent_photo_url'] ?>" width="50">
-                         <?php else: ?>
-                             <img src="<?= base_url('default_agent_photo.jpg') ?>" width="50">
-                        <?php endif; ?></td>
-                    <td>
-                       
-                                        <a href="/admin/agents/edit/<?= esc($agent['id']) ?>" class="btn btn-primary btn-sm">Edit</a>
-                                      
-                                      
-                                        <form action="/admin/agents/delete/<?= esc($agent['id']) ?>" method="post" class="d-inline">
-                                     <?= csrf_field() ?>
-                                            <input type="hidden" name="_method" value="DELETE">
-                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus properti ini?')">Hapus</button>
-                                        </form>
-                        
-                                    </td>
+             <section class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Lihat Agent</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped" id="table1">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Nama</th>
+                                    <th>Alamat</th>
+                                    <th>Nomor Telepon</th>
+                                    <th>Foto</th>
+                                    <th>Aksi</th>
                                 </tr>
-                            <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($agents as $agent): ?>
+                                    <tr>
+                                        <td><?= $no++ ?></td>
+                                        <td><?= $agent['agent_name'] ?></td>
+                                        <td><?= $agent['address'] ?></td>
+                                        <td><?= $agent['phone_number'] ?></td>
+                                         <td>
+                                               <?php if (isset($agent['agent_photo_url']) && !empty($agent['agent_photo_url'])): ?>
+                                                    <img src="<?= $agent['agent_photo_url'] ?>" alt="Property Photo" style="width: 100px; height: 75px; object-fit: cover;">
+                                                <?php else: ?>
+                                                    Tidak ada foto
+                                                <?php endif; ?>
+                                            </td>
+                                            <td>
+                                                <a href="/admin/agents/detail/<?= esc($agent['id']) ?>" class="btn btn-info btn-sm">Lihat</a>
+                                                <a href="/admin/agents/edit/<?= esc($agent['id']) ?>" class="btn btn-primary btn-sm">Edit</a>
+                                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal<?= $agent['id'] ?>">Hapus</button>
+                                            </td>
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="deleteModal<?= $agent['id'] ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Konfirmasi Hapus</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="alert alert-danger" role="alert">
+                                                                <i class="fas fa-exclamation-triangle"></i>
+                                                                Anda yakin ingin menghapus data ini?
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                                                <i class="bi bi-x"></i> Batal
+                                                            </button>
+                                                            <form action="/admin/agents/delete/<?= esc($agent['id']) ?>" method="post" class="d-inline">
+                                                                <?= csrf_field() ?>
+                                                                <input type="hidden" name="_method" value="DELETE">
+                                                                <button type="submit" class="btn btn-danger">
+                                                                    <i class="bi bi-check"></i> Hapus
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
         </div>
-    </section>
+        
+        <?= $this->include('admin/layouts/footer') ?>
+    </div>
 </div>
-  <?= $this->include('admin/layouts/footer') ?>
-</body>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    // Menghilangkan alert setelah 2 detik
+    setTimeout(function() {
+        var successAlert = document.querySelector('.alert-light-success');
+        if (successAlert) {
+            successAlert.classList.remove('show');
+        }
 
+        var errorAlert = document.querySelector('.alert-light-danger');
+        if (errorAlert) {
+            errorAlert.classList.remove('show');
+        }
+    }, 2000);
+</script>
+</body>
 </html>

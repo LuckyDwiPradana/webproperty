@@ -14,7 +14,7 @@ class AgentDealModel extends Model
     {
         $this->client = new Client([
             'headers' => [
-                'Authorization' => 'Bearer ' . session()->get('auth_token'),
+                'Authorization' => 'Bearer ' . session()->get('token'),
             ],
         ]);
         $this->baseUrl = 'http://127.0.0.1:8000/api/agent/';

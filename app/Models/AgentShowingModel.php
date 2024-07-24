@@ -14,18 +14,26 @@ class AgentShowingModel extends Model
     {
         $this->client = new Client([
             'headers' => [
-                'Authorization' => 'Bearer ' . session()->get('auth_token'),
+                'Authorization' => 'Bearer ' . session()->get('token'),
             ],
         ]);
         $this->baseUrl = 'http://127.0.0.1:8000/api/agent/';
     }
 
-    public function getAllShowings()
-    {
-        $response = $this->client->get($this->baseUrl . 'allshowings');
-        $showings = json_decode($response->getBody()->getContents(), true);
-        return $showings['showings'];
-    }
+public function getAllShowings()
+{
+    $response = $this->client->get($this->baseUrl . 'allshowings');
+    $showings = json_decode($response->getBody()->getContents(), true);
+    
+    // Format data showing
+    $formattedShowings = array_map(function($showing) {
+        $showing['property_name'] = $showing['property_name'] ?? 'Unknown Property';
+        $showing['agent_name'] = $showing['agent_name'] ?? 'Unknown Agent';
+        return $showing;
+    }, $showings['showings']);
+
+    return $formattedShowings;
+}
 
     public function getShowing($id)
     {

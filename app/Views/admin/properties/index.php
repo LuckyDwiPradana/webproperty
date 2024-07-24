@@ -26,135 +26,209 @@ $no = 1; // Variabel untuk nomor urut, dimulai dari 1
 <?= $this->include('admin/layouts/navbar') ?>
 
 <body>
-<script src="<?= base_url('/admin/static/js/initTheme.js') ?>"></script>   
-  <div id="app">
-        <div id="main">
-            <header class="mb-3">
-                <a href="#" class="burger-btn d-block d-xl-none">
-                    <i class="bi bi-justify fs-3"></i>
-                </a>
-            </header>
+<script src="<?= base_url('/admin/static/js/initTheme.js') ?>"></script>
+<div id="app">
+    <div id="main">
+        <header class="mb-3">
+            <a href="#" class="burger-btn d-block d-xl-none">
+                <i class="bi bi-justify fs-3"></i>
+            </a>
+        </header>
 
-            <?= $this->include('admin/layouts/sidebar') ?>
-<div class="page-heading">
-    <div class="page-title">
-        <div class="row">
-            <div class="col-12 col-md-6 order-md-1 order-last">
-                <h3>Data Properti</h3>
+        <?= $this->include('admin/layouts/sidebar') ?>
+
+       
+
+        <div class="page-heading">
+            <div class="page-title">
+                 <?php if (session()->getFlashdata('success')): ?>
+            <div class="alert alert-light-success color-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle"></i>
+                <?= session()->getFlashdata('success') ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-            <div class="col-12 col-md-6 order-md-2 order-first">
-                <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/admin/properties/index">Dashboard</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Lihat Properti</li>
-                    </ol>
-                </nav>
+        <?php endif; ?>
+
+        <?php if (session()->getFlashdata('error')): ?>
+            <div class="alert alert-light-danger color-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-circle"></i>
+                <?= session()->getFlashdata('error') ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-        </div>
-    </div>
-    <section class="section">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="card-title">
-                    Lihat Properti
-                </h5>
+        <?php endif; ?>
+                <div class="row">
+                    <div class="col-12 col-md-6 order-md-1 order-last">
+                        <h3>Data Properti</h3>
+                    </div>
+                    <div class="col-12 col-md-6 order-md-2 order-first">
+                        <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="/admin/index">Dashboard</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Lihat Properti</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <table class="table table-striped" id="table1">
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Nama</th>
-                            <th>Status</th>
-                            <th>Lokasi</th>
-                            <th>Kamar Tidur</th>
-                            <th>Kamar Mandi</th>
-                            <th>Luas Bangunan</th>
-                            <th>Harga</th>
-                            <th>Referensi ID</th>
-                            <th>Area</th>
-                            <th>Tipe Listing</th>
-                            <th>Tipe Properti</th>
-                            <th>Luas Lahan</th>
-                            <th>Tahun Dibangun</th>
-                            <th>Deskripsi</th>
-                            <th>Agen</th>
-                            <th>Foto</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (!empty($properties)): ?>
-                            <?php foreach ($properties as $property): ?>
-                                 <tr>
-                                    <td><?= $no++ ?></td>
-                                    <td><?= esc($property['name']) ?></td>
-                                    <td><?= esc($property['status']) ?></td>
-                                    <td><?= esc($property['location']) ?></td>
-                                    <td><?= esc($property['bedroom']) ?></td>
-                                    <td><?= esc($property['bathroom']) ?></td>
-                                    <td><?= esc($property['building_size']) ?> m²</td>
-                                    <td><?= 'Rp ' . number_format($property['price'], 0, ',', '.') ?></td>
-                                    <td><?= esc($property['reference_id']) ?></td>
-                                    <td><?= esc($property['area']) ?></td>
-                                    <td><?= esc($property['listing_type']) ?></td>
-                                    <td><?= esc($property['property_type']) ?></td>
-                                    <td><?= esc($property['land_area']) ?> m²</td>
-                                    <td><?= esc($property['year_built']) ?></td>
-                                    <td><?= esc(substr($property['description'], 0, 50)) . '...' ?></td>
-                                    <td>
-                                        <?php if (isset($property['agent']['agent_name'])): ?>
-                                            <?= esc($property['agent']['agent_name']) ?>
-                                        <?php else: ?>
-                                            -
-                                        <?php endif; ?>
-                                    </td>
-                                    <td>
-                                        <?php if (!empty($property['photos'])): ?>
-                                            <div id="propertyCarousel<?= esc($property['id']) ?>" class="carousel slide carousel-item-container" data-bs-ride="carousel">
-                                                <div class="carousel-inner">
-                                                    <?php $active = true; ?>
-                                                    <?php foreach ($property['photos'] as $photo): ?>
-                                                        <div class="carousel-item <?= $active ? 'active' : '' ?>">
-                                                            <img src="<?= esc($photo['url']) ?>" class="d-block w-100" alt="Property Photo" width="200">
-                                                        </div>
-                                                        <?php $active = false; ?>
-                                                    <?php endforeach; ?>
-                                                </div>
-                                                <button class="carousel-control-prev" type="button" data-bs-target="#propertyCarousel<?= esc($property['id']) ?>" data-bs-slide="prev">
-                                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                                    <span class="visually-hidden">Previous</span>
-                                                </button>
-                                                <button class="carousel-control-next" type="button" data-bs-target="#propertyCarousel<?= esc($property['id']) ?>" data-bs-slide="next">
-                                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                                    <span class="visually-hidden">Next</span>
-                                                </button>
-                                            </div>
-                                        <?php else: ?>
-                                            Tidak ada foto
-                                        <?php endif; ?>
-                                    </td>
-                                    <td>
-                                        <a href="/admin/properties/edit/<?= esc($property['id']) ?>" class="btn btn-primary btn-sm">Edit</a>
-                                        <form action="/admin/properties/delete/<?= esc($property['id']) ?>" method="post" class="d-inline">
-                                            <?= csrf_field() ?>
-                                            <input type="hidden" name="_method" value="DELETE">
-                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus properti ini?')">Hapus</button>
-                                        </form>
-                                    </td>
+
+            <section class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Lihat Properti</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped" id="table1">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Nama</th>
+                                    <th>Status</th>
+                                    <th>Harga</th>
+                                    <th>Foto</th>
+                                    <th>Aksi</th>
                                 </tr>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
-            </div>
+                            </thead>
+                            <tbody>
+                                <?php if (!empty($properties)): ?>
+                                    <?php foreach ($properties as $property): ?>
+                                        <tr>
+                                            <td><?= $no++ ?></td>
+                                            <td><?= esc($property['name']) ?></td>
+                                            <td><?= esc($property['status']) ?></td>
+                                            <td><?= 'Rp ' . number_format($property['price'], 0, ',', '.') ?></td>
+                                            <td>
+                                                <?php if (!empty($property['photos'])): ?>
+                                                    <div id="propertyCarousel<?= esc($property['id']) ?>" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+                                                        <div class="carousel-inner">
+                                                            <?php $active = true; ?>
+                                                            <?php foreach ($property['photos'] as $key => $photo): ?>
+                                                                <div class="carousel-item <?= $active ? 'active' : '' ?>" data-bs-slide-to="<?= $key ?>">
+                                                                    <a href="#" data-toggle="modal" data-target="#photoModal<?= esc($property['id']) ?>" data-slide-to="<?= $key ?>">
+                                                                        <img src="<?= esc($photo['url']) ?>" class="d-block w-100" alt="Property Photo" style="width: 100px; height: 45px; object-fit: cover;">
+                                                                    </a>
+                                                                </div>
+                                                                <?php $active = false; ?>
+                                                            <?php endforeach; ?>
+                                                        </div>
+                                                        <?php if (count($property['photos']) > 1): ?>
+                                                            <a class="carousel-control-prev" href="#propertyCarousel<?= esc($property['id']) ?>" role="button" data-bs-slide="prev">
+                                                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                                <span class="visually-hidden">Previous</span>
+                                                            </a>
+                                                            <a class="carousel-control-next" href="#propertyCarousel<?= esc($property['id']) ?>" role="button" data-bs-slide="next">
+                                                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                                <span class="visually-hidden">Next</span>
+                                                            </a>
+                                                        <?php endif; ?>
+                                                    </div>
+                                                <?php else: ?>
+                                                    Tidak ada foto
+                                                <?php endif; ?>
+                                           <td>
+                                                <a href="/admin/properties/detail/<?= esc($property['id']) ?>" class="btn btn-info btn-sm">Lihat</a>
+                                                <a href="/admin/properties/edit/<?= esc($property['id']) ?>" class="btn btn-primary btn-sm">Edit</a>
+                                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal<?= $property['id'] ?>">Hapus</button>
+                                            </td>
+                                            
+                                                <!-- Modal tombol foto -->
+                                                 <!-- Modal -->
+                                                <?php if (!empty($property['photos'])): ?>
+                                                    <div class="modal fade" id="photoModal<?= esc($property['id']) ?>" tabindex="-1" role="dialog" aria-labelledby="photoModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog modal-lg">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="photoModalLabel">Foto Properti</h5>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <div id="photoCarousel<?= esc($property['id']) ?>" class="carousel slide" data-bs-ride="carousel">
+                                                                        <div class="carousel-inner">
+                                                                            <?php $active = true; ?>
+                                                                            <?php foreach ($property['photos'] as $photo): ?>
+                                                                                <div class="carousel-item <?= $active ? 'active' : '' ?>">
+                                                                                    <img src="<?= esc($photo['url']) ?>" class="d-block w-100" alt="Property Photo">
+                                                                                </div>
+                                                                                <?php $active = false; ?>
+                                                                            <?php endforeach; ?>
+                                                                        </div>
+                                                                        <a class="carousel-control-prev" href="#photoCarousel<?= esc($property['id']) ?>" role="button" data-bs-slide="prev">
+                                                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                                            <span class="visually-hidden">Previous</span>
+                                                                        </a>
+                                                                        <a class="carousel-control-next" href="#photoCarousel<?= esc($property['id']) ?>" role="button" data-bs-slide="next">
+                                                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                                            <span class="visually-hidden">Next</span>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                <?php endif; ?>
+                                            </td>
+                                                <!-- Modal tombol hapus -->
+                                                <div class="modal fade" id="deleteModal<?= $property['id'] ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLabel">Konfirmasi Hapus</h5>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="alert alert-danger" role="alert">
+                                                                    <i class="fas fa-exclamation-triangle"></i>
+                                                                    Anda yakin ingin menghapus properti ini?
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                                                    <i class="bi bi-x"></i> Batal
+                                                                </button>
+                                                                <form action="/admin/properties/delete/<?= esc($property['id']) ?>" method="post" class="d-inline">
+                                                                    <?= csrf_field() ?>
+                                                                    <input type="hidden" name="_method" value="DELETE">
+                                                                    <button type="submit" class="btn btn-danger">
+                                                                        <i class="bi bi-check"></i> Hapus
+                                                                    </button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
         </div>
-    </section>
+        
+        <?= $this->include('admin/layouts/footer') ?>
+    </div>
 </div>
-  <?= $this->include('admin/layouts/footer') ?>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    // Menghilangkan alert setelah 2 detik
+    setTimeout(function() {
+        var successAlert = document.querySelector('.alert-light-success');
+        if (successAlert) {
+            successAlert.classList.remove('show');
+        }
+
+        var errorAlert = document.querySelector('.alert-light-danger');
+        if (errorAlert) {
+            errorAlert.classList.remove('show');
+        }
+    }, 2000);
+</script>
 </body>
-
 </html>
-
-
-    

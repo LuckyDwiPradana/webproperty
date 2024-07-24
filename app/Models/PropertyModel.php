@@ -14,7 +14,7 @@ class PropertyModel extends Model
     {
         $this->client = new Client([
             'headers' => [
-                'Authorization' => 'Bearer ' . session()->get('auth_token'),
+                'Authorization' => 'Bearer ' . session()->get('token'),
             ],
         ]);
         $this->baseUrl = 'http://127.0.0.1:8000/api/admin/';
@@ -164,10 +164,64 @@ public function updateProperty($id, $data)
 }
 
 
-
-    public function deleteProperty($id)
-    {
+public function deleteProperty($id)
+{
+    try {
         $response = $this->client->delete($this->baseUrl . 'property/' . $id);
-        return json_decode($response->getBody()->getContents(), true);
+        $result = json_decode($response->getBody()->getContents(), true);
+
+        if (isset($result['success']) && $result['success'] === true) {
+            // Jika API berhasil menghapus, hapus foto lokal
+            if (isset($result['data']['photos']) && is_array($result['data']['photos'])) {
+                $this->deleteLocalPhotos($result['data']['photos']);
+            } else {
+                log_message('warning', 'No photos data found or invalid format');
+            }
+            return [
+                'success' => true,
+                'message' => $result['message']
+            ];
+        } else {
+            return [
+                'success' => false,
+                'message' => isset($result['message']) ? $result['message'] : 'Gagal menghapus properti'
+            ];
+        }
+    } catch (\Exception $e) {
+        log_message('error', 'Error deleting property: ' . $e->getMessage());
+        return [
+            'success' => false,
+            'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+        ];
     }
+}
+
+  private function deleteLocalPhotos($photos)
+{
+    if (!is_array($photos)) {
+        log_message('error', 'Photos data is not an array');
+        return;
+    }
+
+    foreach ($photos as $photo) {
+        if (!is_array($photo) || !isset($photo['url'])) {
+            log_message('error', 'Invalid photo data structure');
+            continue;
+        }
+
+        // Ekstrak nama file dari URL
+        $filename = basename($photo['url']);
+        $filePath = FCPATH . 'storage/properties/' . $filename;
+
+        if (file_exists($filePath)) {
+            if (unlink($filePath)) {
+                log_message('info', 'File deleted: ' . $filePath);
+            } else {
+                log_message('error', 'Failed to delete file: ' . $filePath);
+            }
+        } else {
+            log_message('warning', 'File not found: ' . $filePath);
+        }
+    }
+}
 }

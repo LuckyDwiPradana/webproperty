@@ -7,7 +7,7 @@ helper('form');
     <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tambah Agen</title>
+    <title>Edit Agen</title>
     
     
     
@@ -58,7 +58,7 @@ helper('form');
                 <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="/admin/index">Dashboard</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Tambah Agen</li>
+                        <li class="breadcrumb-item active" aria-current="page">Edit Agen</li>
                     </ol>
                 </nav>
             </div>
@@ -110,8 +110,8 @@ helper('form');
                             </div>
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
-                                    <label for="twitter">Twitter (URL)</label>
-                                    <input type="url" class="form-control" id="twitter" name="twitter" required value="<?= old('twitter', $agent['twitter']) ?>" placeholder="Masukkan URL Twitter">
+                                    <label for="tiktok">Tiktok (URL)</label>
+                                    <input type="url" class="form-control" id="tiktok" name="tiktok" required value="<?= old('tiktok', $agent['tiktok']) ?>" placeholder="Masukkan URL Twitter">
                                 </div>
                             </div>
                             <div class="col-md-6 col-12">
@@ -130,7 +130,7 @@ helper('form');
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
                                     <label for="agent_photo">Foto Agent</label>
-                                    <input type="file" class="form-control-file" id="agent_photo" name="agent_photo" accept="image/*">
+                                    <input type="file" class="form-control" id="agent_photo" name="agent_photo" accept="image/*">
                                     <?php if (!empty($agent['agent_photo'])): ?>
                                         <img src="<?= $agent['agent_photo_url'] ?>" alt="Foto Agent" class="img-thumbnail mt-2" width="200">
                                     <?php endif; ?>
@@ -144,7 +144,7 @@ helper('form');
                                 </div>
                             </div>
                             <div class="col-12 d-flex justify-content-end">
-                                <button type="submit" class="btn btn-primary me-1 mb-1">Update</button>
+                                <button type="submit" class="btn btn-primary me-1 mb-1">Simpan</button>
                                 <a href="<?= base_url('/admin/agents') ?>" class="btn btn-light-secondary me-1 mb-1">Batal</a>
                             </div>
                         </div>
@@ -181,80 +181,5 @@ helper('form');
 
     </div>
 </div>
-</body>
-</html>
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Edit Agent</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
-</head>
-<body>
-    <div class="container">
-        <h1>Edit Agent</h1>
-        <?php if (session()->has('error')): ?>
-            <div class="alert alert-danger"><?= session()->getFlashdata('error') ?></div>
-        <?php endif; ?>
-    <form action="/admin/agents/update/<?= $agent['id'] ?>" method="post" enctype="multipart/form-data">
-        <?= csrf_field() ?>
-            <input type="hidden" name="_method" value="PUT" />
-            <div class="mb-3">
-                <label for="agent_name" class="form-label">Nama</label>
-                <input type="text" class="form-control" id="agent_name" name="agent_name" value="<?= $agent['agent_name'] ?>">
-            </div>
-            <div class="mb-3">
-                <label for="address" class="form-label">Alamat</label>
-                <textarea class="form-control" id="address" name="address"><?= $agent['address'] ?></textarea>
-            </div>
-            <div class="mb-3">
-                <label for="phone_number" class="form-label">Nomor Telepon</label>
-                <input type="text" class="form-control" id="phone_number" name="phone_number" value="<?= $agent['phone_number'] ?>">
-            </div>
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" value="<?= $agent['email'] ?>">
-            </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" name="password">
-                <small class="form-text text-muted">Biarkan kosong jika tidak ingin mengubah password.</small>
-            </div>
-            <div class="mb-3">
-                <label for="password_confirmation" class="form-label">Konfirmasi Password</label>
-                <input type="password" class="form-control" id="password_confirmation" name="password_confirmation">
-                <small class="form-text text-muted">Biarkan kosong jika tidak ingin mengubah password.</small>
-            </div>
-            <div class="mb-3">
-                <label for="facebook" class="form-label">Facebook</label>
-                <input type="text" class="form-control" id="facebook" name="facebook" value="<?= $agent['facebook'] ?>">
-            </div>
-            <div class="mb-3">
-                <label for="twitter" class="form-label">Twitter</label>
-                <input type="text" class="form-control" id="twitter" name="twitter" value="<?= $agent['twitter'] ?>">
-            </div>
-            <div class="mb-3">
-                <label for="instagram" class="form-label">Instagram</label>
-                <input type="text" class="form-control" id="instagram" name="instagram" value="<?= $agent['instagram'] ?>">
-            </div>
-           <div class="mb-3">
-                <label for="agent_photo" class="form-label">Foto</label>
-                <input type="file" class="form-control" id="agent_photo" name="agent_photo">
-                <small class="form-text text-muted">Biarkan kosong jika tidak ingin mengubah foto.</small>
-                <?php if (!empty($agent['agent_photo_url'])): ?>
-                    <div class="mt-2">
-                        <img src="<?= $agent['agent_photo_url'] ?>" alt="Foto Agent" width="200">
-                    </div>
-                <?php endif; ?>
-            </div>
-            <button type="submit" class="btn btn-primary">Simpan</button>
-            <a href="/admin/agents" class="btn btn-secondary">Batal</a>
-            <?php if (session()->has('success')): ?>
-            <div class="alert alert-success"><?= session()->getFlashdata('success') ?></div>
-            <?php endif; ?>
-            <?php if (session()->has('error')): ?>
-                <div class="alert alert-danger"><?= session()->getFlashdata('error') ?></div>
-            <?php endif; ?>
-        </form>
-    </div>
 </body>
 </html>

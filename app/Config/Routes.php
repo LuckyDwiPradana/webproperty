@@ -14,23 +14,26 @@ $routes->get('home/agents', 'Home::agents');
 $routes->get('home/properties', 'Home::properties');
 $routes->get('home/info', 'Home::info');
 $routes->get('home/kpr', 'Home::kpr');
+$routes->get('home/agent_info/(:num)', 'Home::agent_info/$1');
+$routes->get('home/properties_info/(:num)', 'Home::properties_info/$1');
+
 
 // Auth routes
-$routes->get('login', 'Auth::login');
-$routes->post('login/admin', 'Auth::loginAdmin'); 
-$routes->post('login/agent', 'Auth::loginAgent'); 
-$routes->get('logout', 'Auth::logout');
-$routes->get('/auth/logout', 'Auth::logout');
-$routes->post('/auth/logout', 'Auth::logout');
+$routes->get('login', 'AuthController::index');
+$routes->post('auth/login', 'AuthController::login');
+$routes->get('auth/logout', 'AuthController::logout');
+$routes->post('auth/logout', 'AuthController::logout');
 
 
 // Admin routes
 $routes->group('admin', function ($routes) {
+    $routes->get('Admin', 'Admin::index');  
     $routes->get('index', 'Admin::index');
 
 
     //properties
     $routes->get('properties/index', 'Admin::properties');
+    $routes->get('properties/detail/(:num)', 'Admin::detailProperty/$1');
     $routes->get('properties/create', 'Admin::createProperty');
     $routes->post('properties/store', 'Admin::storeProperty');
     $routes->get('property/(:num)', 'Admin::showProperty/$1');
@@ -41,6 +44,7 @@ $routes->group('admin', function ($routes) {
     
     //agents
     $routes->get('agents/index', 'Admin::agents');
+    $routes->get('agents/detail/(:num)', 'Admin::detailAgent/$1');
     $routes->get('agents/create', 'Admin::createAgent');
     $routes->post('agents/store', 'Admin::storeAgent');
     $routes->get('agents/(:num)', 'Admin::showAgent/$1');
@@ -50,12 +54,13 @@ $routes->group('admin', function ($routes) {
 
     //showings
     $routes->get('showings/index', 'Admin::showings');
+    $routes->get('showings/detail/(:num)', 'Admin::detailShowing/$1');
     $routes->get('showings/create', 'Admin::createShowing');
     $routes->post('showings/store', 'Admin::storeShowing');
     $routes->get('showings/(:num)', 'Admin::showShowing/$1');
     $routes->get('showings/edit/(:num)', 'Admin::editShowing/$1');
     $routes->put('showings/update/(:num)', 'Admin::updateShowing/$1');
-
+    $routes->delete('showings/delete/(:num)', 'Admin::deleteShowing/$1');
 
     //deals
     $routes->get('deals/index', 'Admin::deals');
@@ -78,6 +83,7 @@ $routes->group('agent', function ($routes) {
 
     //properties
     $routes->get('properties/index', 'Agent::properties');
+    $routes->get('properties/detail/(:num)', 'Agent::detailProperty/$1');
     $routes->get('properties/create', 'Agent::createProperty');
     $routes->post('properties/store', 'Agent::storeProperty');
     $routes->get('property/(:num)', 'Agent::showProperty/$1');
@@ -87,6 +93,7 @@ $routes->group('agent', function ($routes) {
 
     //showings
     $routes->get('showings/index', 'Agent::showings');
+    $routes->get('showings/detail/(:num)', 'Agent::detailShowing/$1');
     $routes->get('showings/create', 'Agent::createShowing');
     $routes->post('showings/store', 'Agent::storeShowing');
     $routes->get('showings/(:num)', 'Agent::showShowing/$1');

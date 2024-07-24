@@ -22,5 +22,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js') ?>"></script>
     <script src="<?= base_url('/admin/extensions/simple-datatables/umd/simple-datatables.js') ?>"></script>
     <script src="<?= base_url('/admin/static/js/pages/simple-datatables.js') ?>"></script>
-    <script src="<?= base_url('/admin/extensions/quill/quill.min.js') ?>"></script>
 <script src="<?= base_url('/admin/static/js/pages/quill.js') ?>"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Ensure only numeric input
+        document.querySelectorAll('input[type="number"]').forEach(function(input) {
+            input.addEventListener('input', function() {
+                // Remove non-numeric characters
+                this.value = this.value.replace(/[^0-9.]/g, '');
+            });
+        });
+    });
+</script>

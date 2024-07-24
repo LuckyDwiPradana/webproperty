@@ -47,7 +47,7 @@ helper('form');
             <div class="col-12 col-md-6 order-md-2 order-first">
                 <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/admin/properties/index">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="/admin/index">Dashboard</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Edit Properti</li>
                     </ol>
                 </nav>
@@ -77,8 +77,8 @@ helper('form');
                                         <div class="form-group">
                                             <label for="status">Status</label>
                                             <select class="form-control" id="status" name="status" required>
-                                                <option value="Sale" <?= $property['status'] == 'Sale' ? 'selected' : '' ?>>Jual</option>
-                                                <option value="Rent" <?= $property['status'] == 'Rent' ? 'selected' : '' ?>>Sewa</option>
+                                                <option value="Jual" <?= $property['status'] == 'Jual' ? 'selected' : '' ?>>Jual</option>
+                                                <option value="Sewa" <?= $property['status'] == 'Sewa' ? 'selected' : '' ?>>Sewa</option>
                                             </select>
                                         </div>
                                     </div>
@@ -122,7 +122,7 @@ helper('form');
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <label for="area">Area</label>
-                                            <input type="text" class="form-control" id="area" name="area" value="<?= esc($property['area']) ?>">
+                                            <input type="text" class="form-control" id="area" name="area" value="<?= esc($property['area']) ?>" required>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-12">
@@ -159,13 +159,13 @@ helper('form');
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <label for="land_area">Luas Tanah</label>
-                                            <input type="number" class="form-control" id="land_area" name="land_area" value="<?= esc($property['land_area']) ?>">
+                                            <input type="number" class="form-control" id="land_area" name="land_area" value="<?= esc($property['land_area']) ?>" required>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
                                             <label for="year_built">Tahun Dibangun</label>
-                                            <input type="number" class="form-control" id="year_built" name="year_built" value="<?= esc($property['year_built']) ?>">
+                                            <input type="number" class="form-control" id="year_built" name="year_built" value="<?= esc($property['year_built']) ?>"required>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-12">

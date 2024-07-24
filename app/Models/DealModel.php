@@ -14,7 +14,7 @@ class DealModel extends Model
     {
         $this->client = new Client([
             'headers' => [
-                'Authorization' => 'Bearer ' . session()->get('auth_token'),
+                'Authorization' => 'Bearer ' . session()->get('token'),
             ],
         ]);
         $this->baseUrl = 'http://127.0.0.1:8000/api/admin/';
@@ -34,49 +34,50 @@ class DealModel extends Model
         return $deal['deal'];
     }
 
-    public function createDeal($data)
-    {
-        $documentation = null;
-        if (isset($data['documentation']) && is_object($data['documentation'])) {
-            $documentation = $data['documentation'];
-            unset($data['documentation']);
-        }
-
-        $multipart = [];
-        foreach ($data as $key => $value) {
-            $multipart[] = [
-                'name' => $key,
-                'contents' => $value
-            ];
-        }
-
-        if ($documentation !== null) {
-            $multipart[] = [
-                'name' => 'documentation',
-                'contents' => fopen($documentation->getTempName(), 'r'),
-                'filename' => $documentation->getName(),
-                'headers' => [
-                    'Content-Type' => $documentation->getMimeType()
-                ]
-            ];
-        }
-
-        try {
-            $response = $this->client->post($this->baseUrl . 'deal', [
-                'multipart' => $multipart
-            ]);
-            $result = json_decode($response->getBody()->getContents(), true);
-
-            // Log respons dari API
-            log_message('debug', 'Respons dari API: ' . print_r($result, true));
-
-            return true; // Indikator berhasil
-        } catch (\Exception $e) {
-            // Log kesalahan
-            log_message('error', 'Terjadi kesalahan: ' . $e->getMessage());
-            return false; // Indikator gagal
-        }
+public function createDeal($data)
+{
+    $documentation = null;
+    if (isset($data['documentation']) && is_object($data['documentation'])) {
+        $documentation = $data['documentation'];
+        unset($data['documentation']);
     }
+
+    $multipart = [];
+    foreach ($data as $key => $value) {
+        $multipart[] = [
+            'name' => $key,
+            'contents' => $value
+        ];
+    }
+
+    if ($documentation !== null) {
+        $multipart[] = [
+            'name' => 'documentation',
+            'contents' => fopen($documentation->getTempName(), 'r'),
+            'filename' => $documentation->getName(),
+            'headers' => [
+                'Content-Type' => $documentation->getMimeType()
+            ]
+        ];
+    }
+
+    try {
+        $response = $this->client->post($this->baseUrl . 'deal', [
+            'multipart' => $multipart
+        ]);
+        $result = json_decode($response->getBody()->getContents(), true);
+
+        // Log respons dari API
+        log_message('debug', 'Respons dari API: ' . print_r($result, true));
+
+        return true; // Indikator berhasil
+    } catch (\Exception $e) {
+        // Log kesalahan
+        log_message('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        return false; // Indikator gagal
+    }
+}
+
 
     public function updateDeal($id, $data)
     {
